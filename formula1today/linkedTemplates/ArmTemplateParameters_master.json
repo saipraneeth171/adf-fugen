@@ -5,8 +5,20 @@
 		"factoryName": {
 			"value": "formula1today"
 		},
+		"AzureSqlDatabase1_password": {
+			"value": ""
+		},
 		"adlsgen2_accountKey": {
 			"value": ""
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "fugenn.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "master"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "sqladmin"
 		},
 		"adlsgen2_properties_typeProperties_url": {
 			"value": "https://fugenstorage.dfs.core.windows.net/"
