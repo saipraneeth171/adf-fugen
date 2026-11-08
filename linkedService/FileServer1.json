@@ -6,8 +6,8 @@
 		"type": "FileServer",
 		"typeProperties": {
 			"host": "C:\\Users\\Admin\\Downloads\\source\\circuits.csv",
-			"userId": ",\\ADFLab",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhYjk0Mzg0MC0wMzc1LTRlNDAtYWZkOC0zZDk4MDA5MTA1MTQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"userId": "ADFLab",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2OWNmZDk0Zi03NTgxLTRmZGMtYTQyMC0xOTE1ZTdmYWVkN2MiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "selfhostedintegrationRuntime",
