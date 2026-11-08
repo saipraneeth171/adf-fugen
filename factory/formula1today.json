@@ -1,0 +1,15 @@
+{
+	"name": "formula1today",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "18bc27fe-ec6c-4022-a50b-d218fc194e1a",
+		"tenantId": "8da82342-f400-474e-94c1-91daf2e93707"
+	}
+}
