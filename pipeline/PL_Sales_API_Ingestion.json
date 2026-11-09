@@ -1,0 +1,37 @@
+{
+	"name": "PL_Sales_API_Ingestion",
+	"properties": {
+		"activities": [
+			{
+				"name": "Call_Sales_API",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.01:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "https://jsonplaceholder.typicode.com/posts",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "Anonymous"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"BusinessDate": {
+				"type": "String",
+				"defaultValue": "2026-11-09"
+			}
+		},
+		"annotations": []
+	}
+}
