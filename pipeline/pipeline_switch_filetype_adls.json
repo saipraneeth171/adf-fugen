@@ -182,7 +182,31 @@
 														}
 													},
 													"enableStaging": false
-												}
+												},
+												"inputs": [
+													{
+														"referenceName": "ds_src_folder_Json1",
+														"type": "DatasetReference",
+														"parameters": {
+															"fileName": {
+																"value": "@item().name",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "ds_sink_folder_json_adls",
+														"type": "DatasetReference",
+														"parameters": {
+															"fileName": {
+																"value": "@item().name",
+																"type": "Expression"
+															}
+														}
+													}
+												]
 											}
 										]
 									}
