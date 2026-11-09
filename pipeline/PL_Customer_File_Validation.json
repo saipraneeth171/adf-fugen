@@ -1,0 +1,18 @@
+{
+	"name": "PL_Customer_File_Validation",
+	"properties": {
+		"activities": [
+			{
+				"name": "Validate_Customer_File",
+				"type": "Validation",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"timeout": "00:05:00",
+					"sleep": 10
+				}
+			}
+		],
+		"annotations": []
+	}
+}
