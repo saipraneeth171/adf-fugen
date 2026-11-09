@@ -15,7 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "dbo.usp_InsertADFAudit",
+					"storedProcedureName": "raw.usp_InsertADFAudit",
 					"storedProcedureParameters": {
 						"PipelineName": {
 							"value": {
@@ -29,6 +29,10 @@
 							"type": "String"
 						}
 					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
