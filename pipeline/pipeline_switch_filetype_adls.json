@@ -59,7 +59,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"on": {
-									"value": "@last(split(item().name,'.'))",
+									"value": "@toLower(last(split(item().name,'.')))\n",
 									"type": "Expression"
 								},
 								"cases": [
@@ -228,12 +228,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"fileType": {
-				"type": "string",
-				"defaultValue": "csv"
-			}
-		},
 		"variables": {
 			"resultMessage": {
 				"type": "String"
