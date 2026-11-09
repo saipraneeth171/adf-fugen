@@ -6,8 +6,8 @@
 		"type": "FileServer",
 		"typeProperties": {
 			"host": "C:\\Users\\Admin\\Downloads\\source",
-			"userId": ".\\ADFLab",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwMjM4NWYxMy0xNjMyLTQ2OTQtYWMxMS05MGZhZWMzYzlkOWMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"userId": "DESKTOP-JC5DACM\\ADFLab",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhNWQ0MzIzYi1lNmEzLTQyNmMtYmFiMy00MDYwYjI1ZmM4NzMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "selfhostedintegrationRuntime",
