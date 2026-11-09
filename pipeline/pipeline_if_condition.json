@@ -108,7 +108,10 @@
 						"referenceName": "AzureSqlTable1",
 						"type": "DatasetReference"
 					},
-					"fieldList": []
+					"fieldList": [
+						"exists",
+						"columnCount"
+					]
 				}
 			}
 		],
