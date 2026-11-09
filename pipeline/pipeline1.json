@@ -196,7 +196,8 @@
 		],
 		"parameters": {
 			"fileName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "circuits.csv"
 			},
 			"sourceFolder": {
 				"type": "string",
