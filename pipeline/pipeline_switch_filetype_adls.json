@@ -84,7 +84,11 @@
 														"storeSettings": {
 															"type": "FileServerReadSettings",
 															"recursive": true,
-															"enablePartitionDiscovery": false
+															"enablePartitionDiscovery": false,
+															"fileFilter": {
+																"value": "@item().name",
+																"type": "Expression"
+															}
 														},
 														"formatSettings": {
 															"type": "DelimitedTextReadSettings"
@@ -159,7 +163,11 @@
 														"storeSettings": {
 															"type": "FileServerReadSettings",
 															"recursive": true,
-															"enablePartitionDiscovery": false
+															"enablePartitionDiscovery": false,
+															"fileFilter": {
+																"value": "@item().name",
+																"type": "Expression"
+															}
 														},
 														"formatSettings": {
 															"type": "DelimitedTextReadSettings"
@@ -192,7 +200,7 @@
 														"type": "DatasetReference",
 														"parameters": {
 															"filename": {
-																"value": "@item().file",
+																"value": "@item().fileName",
 																"type": "Expression"
 															}
 														}
