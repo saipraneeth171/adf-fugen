@@ -8,7 +8,7 @@
 		"AzureSqlDatabase1_password": {
 			"value": ""
 		},
-		"FileServer1_password": {
+		"FileServer2_password": {
 			"value": ""
 		},
 		"adlsgen2_accountKey": {
@@ -23,11 +23,11 @@
 		"AzureSqlDatabase1_properties_typeProperties_userName": {
 			"value": "sqladmin"
 		},
-		"FileServer1_properties_typeProperties_host": {
-			"value": "C:\\Users\\Admin\\Downloads\\source\\circuits.csv"
+		"FileServer2_properties_typeProperties_host": {
+			"value": "C:\\Users\\Admin\\Downloads\\source"
 		},
-		"FileServer1_properties_typeProperties_userId": {
-			"value": "ADFLab"
+		"FileServer2_properties_typeProperties_userId": {
+			"value": "desktop-jc5dacm\\adflab"
 		},
 		"adlsgen2_properties_typeProperties_url": {
 			"value": "https://fugenstorage.dfs.core.windows.net/"
