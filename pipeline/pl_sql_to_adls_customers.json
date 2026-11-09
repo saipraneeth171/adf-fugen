@@ -49,7 +49,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DelimitedText1",
+						"referenceName": "ds_raw_customers_file",
 						"type": "DatasetReference"
 					}
 				]
