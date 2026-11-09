@@ -1,0 +1,27 @@
+{
+	"name": "PL_Load_Orders",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set_Orders_Message",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Message",
+					"value": "Orders pipeline executed successfully"
+				}
+			}
+		],
+		"variables": {
+			"Message": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
