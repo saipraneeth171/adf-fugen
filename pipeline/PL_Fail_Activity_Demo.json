@@ -1,0 +1,53 @@
+{
+	"name": "PL_Fail_Activity_Demo",
+	"properties": {
+		"activities": [
+			{
+				"name": "Check_Mandatory_Columns",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(1,2)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Fail_Invalid_Data",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "Mandatory customer columns are missing",
+								"errorCode": "INVALID_CUSTOMER_FILE"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Valid_Data",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Status",
+								"value": "Valid"
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"Status": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
