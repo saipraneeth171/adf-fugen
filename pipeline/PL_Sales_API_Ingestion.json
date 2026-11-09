@@ -19,9 +19,6 @@
 					"url": {
 						"value": "https://jsonplaceholder.typicode.com/posts",
 						"type": "Expression"
-					},
-					"authentication": {
-						"type": "Anonymous"
 					}
 				}
 			}
