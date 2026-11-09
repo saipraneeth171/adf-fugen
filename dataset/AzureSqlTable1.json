@@ -28,7 +28,7 @@
 		],
 		"typeProperties": {
 			"schema": "raw",
-			"table": "Customers"
+			"table": "orders"
 		}
 	}
 }
