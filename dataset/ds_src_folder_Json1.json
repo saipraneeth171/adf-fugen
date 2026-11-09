@@ -1,0 +1,45 @@
+{
+	"name": "ds_src_folder_Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FileServer2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"fileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": {
+					"value": "@dataset().fileName",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"constructorId": {
+					"type": "integer"
+				},
+				"constructorRef": {
+					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				},
+				"nationality": {
+					"type": "string"
+				},
+				"url": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
