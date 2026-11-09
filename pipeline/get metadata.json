@@ -29,7 +29,8 @@
 						"itemType"
 					],
 					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
+						"type": "FileServerReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {

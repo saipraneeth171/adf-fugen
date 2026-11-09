@@ -2,16 +2,14 @@
 	"name": "ds_src_folder",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "adlsgen2",
+			"referenceName": "FileServer2",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
-				"folderPath": "test",
-				"fileSystem": "source"
+				"type": "FileServerLocation"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
