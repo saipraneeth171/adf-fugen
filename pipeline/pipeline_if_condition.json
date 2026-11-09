@@ -1,5 +1,5 @@
 {
-	"name": "pipeline_condition",
+	"name": "pipeline_if_condition",
 	"properties": {
 		"activities": [
 			{
