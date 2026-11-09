@@ -1,0 +1,58 @@
+{
+	"name": "PL_Webhook_Customer_Validation",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait_For_Customer_Validation",
+				"type": "WebHook",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://your-company-api.com/validate-customer",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"fileName": "customers_20261109.csv",
+						"container": "source",
+						"validationType": "CustomerSchema"
+					},
+					"timeout": "00:15:00",
+					"reportStatusOnCallBack": true
+				}
+			},
+			{
+				"name": "Continue_Data_Load",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Wait_For_Customer_Validation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Status",
+					"value": "Validation Completed"
+				}
+			}
+		],
+		"variables": {
+			"Status": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
