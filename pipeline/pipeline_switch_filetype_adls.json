@@ -20,23 +20,18 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"childItems",
-						"exists",
-						"itemName",
-						"itemType"
+						"childItems"
 					],
 					"storeSettings": {
 						"type": "FileServerReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
 					}
 				}
 			},
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
+				"name": "FilterFiles",
+				"type": "Filter",
 				"dependsOn": [
 					{
 						"activity": "Get Metadata1",
@@ -51,6 +46,30 @@
 						"value": "@activity('Get Metadata1').output.childItems",
 						"type": "Expression"
 					},
+					"condition": {
+						"value": "@equals(item().type,'File')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "FilterFiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('FilterFiles').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "Switch1",
@@ -59,7 +78,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"on": {
-									"value": "@toLower(last(split(item().name,'.')))\n",
+									"value": "@toLower(last(split(item().name,'.')))",
 									"type": "Expression"
 								},
 								"cases": [
@@ -67,11 +86,10 @@
 										"value": "csv",
 										"activities": [
 											{
-												"name": "Copy data1",
+												"name": "Copy_CSV",
 												"type": "Copy",
 												"dependsOn": [],
 												"policy": {
-													"timeout": "0.12:00:00",
 													"retry": 0,
 													"retryIntervalInSeconds": 30,
 													"secureOutput": false,
@@ -83,8 +101,7 @@
 														"type": "DelimitedTextSource",
 														"storeSettings": {
 															"type": "FileServerReadSettings",
-															"recursive": true,
-															"enablePartitionDiscovery": false
+															"recursive": false
 														},
 														"formatSettings": {
 															"type": "DelimitedTextReadSettings"
@@ -98,18 +115,10 @@
 														"formatSettings": {
 															"type": "DelimitedTextWriteSettings",
 															"quoteAllText": true,
-															"fileExtension": ".txt"
+															"fileExtension": ".csv"
 														}
 													},
-													"enableStaging": false,
-													"translator": {
-														"type": "TabularTranslator",
-														"typeConversion": true,
-														"typeConversionSettings": {
-															"allowDataTruncation": true,
-															"treatBooleanAsNumber": false
-														}
-													}
+													"enableStaging": false
 												},
 												"inputs": [
 													{
@@ -142,11 +151,10 @@
 										"value": "json",
 										"activities": [
 											{
-												"name": "Copy data2",
+												"name": "Copy_JSON",
 												"type": "Copy",
 												"dependsOn": [],
 												"policy": {
-													"timeout": "0.12:00:00",
 													"retry": 0,
 													"retryIntervalInSeconds": 30,
 													"secureOutput": false,
@@ -155,65 +163,26 @@
 												"userProperties": [],
 												"typeProperties": {
 													"source": {
-														"type": "DelimitedTextSource",
+														"type": "JsonSource",
 														"storeSettings": {
 															"type": "FileServerReadSettings",
-															"recursive": true,
-															"enablePartitionDiscovery": false,
-															"fileFilter": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
+															"recursive": false
 														},
 														"formatSettings": {
-															"type": "DelimitedTextReadSettings"
+															"type": "JsonReadSettings"
 														}
 													},
 													"sink": {
-														"type": "DelimitedTextSink",
+														"type": "JsonSink",
 														"storeSettings": {
 															"type": "AzureBlobFSWriteSettings"
 														},
 														"formatSettings": {
-															"type": "DelimitedTextWriteSettings",
-															"quoteAllText": true,
-															"fileExtension": ".txt"
+															"type": "JsonWriteSettings"
 														}
 													},
-													"enableStaging": false,
-													"translator": {
-														"type": "TabularTranslator",
-														"typeConversion": true,
-														"typeConversionSettings": {
-															"allowDataTruncation": true,
-															"treatBooleanAsNumber": false
-														}
-													}
-												},
-												"inputs": [
-													{
-														"referenceName": "ds_src_folder_filename",
-														"type": "DatasetReference",
-														"parameters": {
-															"filename": {
-																"value": "@item().fileName",
-																"type": "Expression"
-															}
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "ds_switch_file",
-														"type": "DatasetReference",
-														"parameters": {
-															"fileName": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
-														}
-													}
-												]
+													"enableStaging": false
+												}
 											}
 										]
 									}
