@@ -80,9 +80,6 @@
 					"adlsgen2_accountKey": {
 						"value": "[parameters('adlsgen2_accountKey')]"
 					},
-					"FileServer2_password": {
-						"value": "[parameters('FileServer2_password')]"
-					},
 					"AzureSqlDatabase1_properties_typeProperties_server": {
 						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]"
 					},
@@ -94,12 +91,6 @@
 					},
 					"adlsgen2_properties_typeProperties_url": {
 						"value": "[parameters('adlsgen2_properties_typeProperties_url')]"
-					},
-					"FileServer2_properties_typeProperties_host": {
-						"value": "[parameters('FileServer2_properties_typeProperties_host')]"
-					},
-					"FileServer2_properties_typeProperties_userId": {
-						"value": "[parameters('FileServer2_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -118,6 +109,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"FileServer2_password": {
+						"value": "[parameters('FileServer2_password')]"
+					},
+					"FileServer2_properties_typeProperties_host": {
+						"value": "[parameters('FileServer2_properties_typeProperties_host')]"
+					},
+					"FileServer2_properties_typeProperties_userId": {
+						"value": "[parameters('FileServer2_properties_typeProperties_userId')]"
 					},
 					"trigger1_properties_typeProperties_scope": {
 						"value": "[parameters('trigger1_properties_typeProperties_scope')]"
