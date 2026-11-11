@@ -1,0 +1,71 @@
+{
+	"name": "PL_Parameter_Variable_Demo",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_Employee",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT * FROM dbo.Employee WHERE Department = ''',pipeline().parameters.pDepartment,'''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set_Employee_Count",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup_Employee",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "vEmployeeCount",
+					"value": {
+						"value": "@activity('Lookup_Employee').output.count",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pDepartment": {
+				"type": "String",
+				"defaultValue": "IT"
+			}
+		},
+		"variables": {
+			"vEmployeeCount": {
+				"type": "Integer",
+				"defaultValue": 0
+			}
+		},
+		"annotations": []
+	}
+}
