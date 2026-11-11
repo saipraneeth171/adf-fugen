@@ -49,7 +49,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT * FROM raw.Employee_Config",
+						"sqlReaderQuery": "SELECT * FROM raw.customers",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -82,7 +82,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "raw.usp_GetEmployeeDetails",
+						"sqlReaderStoredProcedureName": "[raw].[usp_raw_customers]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
