@@ -10,9 +10,6 @@
 			},
 			"pUserName": {
 				"type": "String"
-			},
-			"pSecretName": {
-				"type": "String"
 			}
 		},
 		"annotations": [],
