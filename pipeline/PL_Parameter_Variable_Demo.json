@@ -17,7 +17,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "@concat('SELECT * FROM dbo.Employee WHERE Department = ''',pipeline().parameters.pDepartment,'''')",
+							"value": "@concat('SELECT * FROM raw.customers WHERE country = ''',pipeline().parameters.pCountry,'''')",
 							"type": "Expression"
 						},
 						"partitionOption": "None"
@@ -55,9 +55,9 @@
 			}
 		],
 		"parameters": {
-			"pDepartment": {
+			"pCountry": {
 				"type": "String",
-				"defaultValue": "IT"
+				"defaultValue": "India"
 			}
 		},
 		"variables": {
