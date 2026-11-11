@@ -1,0 +1,37 @@
+{
+	"name": "AzureSqlDatabase2",
+	"properties": {
+		"parameters": {
+			"pServerName": {
+				"type": "String"
+			},
+			"pDatabaseName": {
+				"type": "String"
+			},
+			"pUserName": {
+				"type": "String"
+			},
+			"pSecretName": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "@{linkedService().pServerName}",
+			"database": "@{linkedService().pDatabaseName}",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "@{linkedService().pUserName}",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "password"
+			}
+		}
+	}
+}
