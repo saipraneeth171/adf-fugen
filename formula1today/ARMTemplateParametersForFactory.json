@@ -15,7 +15,7 @@
 			"value": ""
 		},
 		"AzureKeyVault1_properties_typeProperties_baseUrl": {
-			"value": "https://fugenacademy.vault.azure.net/"
+			"value": "https://fugenacademykv.vault.azure.net/"
 		},
 		"AzureSqlDatabase1_properties_typeProperties_server": {
 			"value": "fugenn.database.windows.net"
@@ -37,6 +37,15 @@
 		},
 		"trigger1_properties_typeProperties_scope": {
 			"value": "/subscriptions/f8bd2af8-fe0f-4c8e-a810-7e628fd0139b/resourceGroups/fugen/providers/Microsoft.Storage/storageAccounts/fugenstorage"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_server": {
+			"value": "@{linkedService().pServerName}"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_database": {
+			"value": "@{linkedService().pDatabaseName}"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_userName": {
+			"value": "@{linkedService().pUserName}"
 		}
 	}
 }
