@@ -207,6 +207,40 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_SetVariable_Demo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set_Employee_Name",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "vEmployeeName",
+							"value": "Ravi"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"vEmployeeName": {
+						"type": "String",
+						"defaultValue": "Unknown"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_Webhook_Customer_Validation')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -527,23 +561,25 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_SetVariable_Demo')]",
+			"name": "[concat(parameters('factoryName'), '/PL_Filter_Demo')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Set_Employee_Name",
-						"type": "SetVariable",
+						"name": "Filter_CSV",
+						"type": "Filter",
 						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "vEmployeeName",
-							"value": "Ravi"
+							"items": {
+								"value": "@variables('FileList')",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@and(equals(item().type,'File'),endsWith(toLower(item().name),'.csv'))",
+								"type": "Expression"
+							}
 						}
 					}
 				],
@@ -551,9 +587,87 @@
 					"elapsedTimeMetric": {}
 				},
 				"variables": {
-					"vEmployeeName": {
-						"type": "String",
-						"defaultValue": "Unknown"
+					"FileList": {
+						"type": "Array",
+						"defaultValue": [
+							{
+								"name": "customers.csv",
+								"type": "File"
+							},
+							{
+								"name": "orders.csv",
+								"type": "File"
+							},
+							{
+								"name": "employees.json",
+								"type": "File"
+							},
+							{
+								"name": "products.parquet",
+								"type": "File"
+							}
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_ForEach_Demo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach_Employee",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('EmployeeList')",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Set_Current_Employee",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "CurrentEmployee",
+										"value": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"EmployeeList": {
+						"type": "Array",
+						"defaultValue": [
+							"Ravi",
+							"Priya",
+							"Kumar",
+							"Anil",
+							"Sneha"
+						]
+					},
+					"CurrentEmployee": {
+						"type": "String"
 					}
 				},
 				"annotations": []
@@ -800,96 +914,6 @@
 					"quoteChar": "\""
 				},
 				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adlsgen2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_sink_csv_param')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adlsgen2",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"fileName": {
-						"type": "string"
-					},
-					"folderName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().fileName",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@dataset().folderName",
-							"type": "Expression"
-						},
-						"fileSystem": "raw"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adlsgen2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_sink_folder_json_adls')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adlsgen2",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"fileName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "raw"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"constructorId": {
-							"type": "integer"
-						},
-						"constructorRef": {
-							"type": "string"
-						},
-						"name": {
-							"type": "string"
-						},
-						"nationality": {
-							"type": "string"
-						},
-						"url": {
-							"type": "string"
-						}
-					}
-				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/adlsgen2')]"
