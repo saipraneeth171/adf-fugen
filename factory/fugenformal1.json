@@ -1,0 +1,15 @@
+{
+	"name": "fugenformal1",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "4a8a25e9-193f-4fc4-b628-d9225f03a212",
+		"tenantId": "5667d334-b605-47f0-9458-7974ccf0eba7"
+	}
+}
