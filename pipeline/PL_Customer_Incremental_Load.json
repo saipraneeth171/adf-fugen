@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT LastLoadDate FROM dbo.Watermark WHERE TableName = 'Customers'",
+						"sqlReaderQuery": "SELECT LastLoadDate FROM raw.Watermark WHERE TableName = 'Customers'",
 						"queryTimeout": "00:05:00",
 						"partitionOption": "None"
 					},
@@ -50,7 +50,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT COALESCE(MAX(LastModifiedDate), CAST('2000-01-01' AS DATETIME2(0))) AS NewWatermark FROM dbo.Customers",
+						"sqlReaderQuery": "SELECT COALESCE(MAX(LastModifiedDate), CAST('2000-01-01' AS DATETIME2(0))) AS NewWatermark FROM raw.Customers",
 						"queryTimeout": "00:05:00",
 						"partitionOption": "None"
 					},
@@ -84,7 +84,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "@concat('SELECT CustomerID, CustomerName, City, LastModifiedDate FROM dbo.Customers WHERE LastModifiedDate > ''', formatDateTime(activity('Lookup_Old_Watermark').output.firstRow.LastLoadDate, 'yyyy-MM-ddTHH:mm:ss'), ''' AND LastModifiedDate <= ''', formatDateTime(activity('Lookup_New_Watermark').output.firstRow.NewWatermark, 'yyyy-MM-ddTHH:mm:ss'), '''')",
+							"value": "@concat('SELECT CustomerID, CustomerName, City, LastModifiedDate FROM raw.Customers WHERE LastModifiedDate > ''', formatDateTime(activity('Lookup_Old_Watermark').output.firstRow.LastLoadDate, 'yyyy-MM-ddTHH:mm:ss'), ''' AND LastModifiedDate <= ''', formatDateTime(activity('Lookup_New_Watermark').output.firstRow.NewWatermark, 'yyyy-MM-ddTHH:mm:ss'), '''')",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -124,7 +124,7 @@
 			},
 			{
 				"name": "Update_Watermark",
-				"type": "StoredProcedure",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
 						"activity": "Copy_Incremental_Data",
@@ -142,7 +142,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "dbo.usp_UpdateWatermark",
+					"storedProcedureName": "[raw].[usp_UpdateWatermark]",
 					"storedProcedureParameters": {
 						"TableName": {
 							"value": "Customers",
@@ -158,7 +158,7 @@
 					}
 				},
 				"linkedServiceName": {
-					"referenceName": "LS_AzureSQL",
+					"referenceName": "AzureSqlDatabase1",
 					"type": "LinkedServiceReference"
 				}
 			}
