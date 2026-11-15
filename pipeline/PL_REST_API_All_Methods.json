@@ -1,0 +1,133 @@
+{
+	"name": "PL_REST_API_All_Methods",
+	"properties": {
+		"activities": [
+			{
+				"name": "GET_Request",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.00:05:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://jsonplaceholder.typicode.com/posts/1"
+				}
+			},
+			{
+				"name": "POST_Request",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "GET_Request",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.00:05:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://jsonplaceholder.typicode.com/posts",
+					"body": "{ \"title\": \"ADF Training\", \"body\": \"POST API demonstration\", \"userId\": 1 }"
+				}
+			},
+			{
+				"name": "PUT_Request",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "POST_Request",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.00:05:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "PUT",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://jsonplaceholder.typicode.com/posts/1",
+					"body": "{ \"id\": 1, \"title\": \"ADF Updated Title\", \"body\": \"Complete record updated using PUT\", \"userId\": 1 }"
+				}
+			},
+			{
+				"name": "PATCH_Request",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "PUT_Request",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.00:05:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "PATCH",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://jsonplaceholder.typicode.com/posts/1",
+					"body": "{ \"title\": \"ADF Partial Update\" }"
+				}
+			},
+			{
+				"name": "DELETE_Request",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "PATCH_Request",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.00:05:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "DELETE",
+					"url": "https://jsonplaceholder.typicode.com/posts/1"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
