@@ -72,6 +72,10 @@
 							"type": "Int"
 						}
 					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
