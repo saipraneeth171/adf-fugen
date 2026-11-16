@@ -1,6 +1,10 @@
 {
-	"name": "DS_SOURCE_CSV",
+	"name": "DS_Source_Csv",
 	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adlsgen2",
+			"type": "LinkedServiceReference"
+		},
 		"parameters": {
 			"container": {
 				"type": "String"
