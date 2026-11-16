@@ -1,0 +1,11 @@
+{
+	"name": "DS_Control",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "ctl.FileConfig"
+		}
+	}
+}
