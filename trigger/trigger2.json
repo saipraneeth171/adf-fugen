@@ -3,14 +3,21 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [],
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "PL_00_Master",
+					"type": "PipelineReference"
+				}
+			}
+		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Minute",
-				"interval": 15,
-				"startTime": "2026-11-16T16:50:00",
-				"timeZone": "India Standard Time"
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2026-11-17T02:00:00Z",
+				"timeZone": "UTC"
 			}
 		}
 	}
