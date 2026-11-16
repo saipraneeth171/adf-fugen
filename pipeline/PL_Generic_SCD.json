@@ -1,0 +1,91 @@
+{
+	"name": "PL_Generic_SCD",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_Customer_To_Stage",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT CustomerID, CustomerName, City FROM raw.Customer_Source",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "TRUNCATE TABLE raw.Customer_Stage",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": true
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_Customer_Source",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_Customer_Stage",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Apply_SCD_Logic",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy_Customer_To_Stage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.00:05:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "raw.usp_ApplyCustomerSCD",
+					"storedProcedureParameters": {
+						"SCDType": {
+							"value": {
+								"value": "@pipeline().parameters.SCDType",
+								"type": "Expression"
+							},
+							"type": "Int"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"SCDType": {
+				"type": "Int"
+			},
+			"SourceTable": {
+				"type": "String"
+			},
+			"TargetTable": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}

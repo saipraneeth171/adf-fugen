@@ -56,6 +56,10 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PL_Generic_SCD",
+									"type": "PipelineReference"
+								},
 								"waitOnCompletion": true
 							}
 						}
