@@ -1,0 +1,100 @@
+{
+	"name": "PL_03_Gold_FactResults",
+	"properties": {
+		"activities": [
+			{
+				"name": "SP_Load_FactRaceResults",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "raw.usp_Load_FactRaceResults",
+					"storedProcedureParameters": {
+						"RunId": {
+							"value": {
+								"value": "@pipeline().parameters.pRunId",
+								"type": "Expression"
+							},
+							"type": "Guid"
+						}
+					}
+				}
+			},
+			{
+				"name": "LKP_FactValidation",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "SP_Load_FactRaceResults",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT (SELECT COUNT(*) FROM (SELECT DISTINCT TRY_CONVERT(INT, NULLIF(LTRIM(RTRIM([resultId])), CHAR(92)+'N')) AS id FROM raw.Stg_Results) x WHERE id IS NOT NULL) AS StgRows, (SELECT COUNT(*) FROM raw.FactRaceResults WHERE IsDeleted = 0) AS FactRows",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "IF_FactValidation",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "LKP_FactValidation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('LKP_FactValidation').output.firstRow.StgRows, activity('LKP_FactValidation').output.firstRow.FactRows)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "FAIL_FactValidation",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": {
+									"value": "@concat('Fact validation failed. Staging distinct results: ', string(activity('LKP_FactValidation').output.firstRow.StgRows), '; active fact rows: ', string(activity('LKP_FactValidation').output.firstRow.FactRows))",
+									"type": "Expression"
+								},
+								"errorCode": "FACT_VALIDATION_FAILED"
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"pRunId": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "F1"
+		},
+		"annotations": []
+	}
+}
