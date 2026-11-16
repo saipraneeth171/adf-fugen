@@ -1,11 +1,12 @@
 {
 	"name": "DS_Control",
 	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [],
-		"typeProperties": {
-			"table": "ctl.FileConfig"
-		}
+		"schema": []
 	}
 }
