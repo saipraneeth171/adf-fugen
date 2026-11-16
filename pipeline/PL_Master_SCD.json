@@ -60,7 +60,18 @@
 									"referenceName": "PL_Generic_SCD",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"SCDType": {
+										"value": "@item().SCDType",
+										"type": "Expression"
+									},
+									"SourceTable": {
+										"value": "@item().SourceTable",
+										"type": "Expression"
+									},
+									"TargetTable": "@item().TargetTable"
+								}
 							}
 						}
 					]
