@@ -106,7 +106,11 @@
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false
 								},
-								"enableStaging": false
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mapComplexValuesToString": false
+								}
 							},
 							"inputs": [
 								{
