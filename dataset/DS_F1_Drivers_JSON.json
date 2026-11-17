@@ -1,0 +1,77 @@
+{
+	"name": "DS_F1_Drivers_JSON",
+	"properties": {
+		"parameters": {
+			"pContainer": {
+				"type": "String",
+				"defaultValue": "f1-data"
+			},
+			"pFolderPath": {
+				"type": "String",
+				"defaultValue": "incoming/drivers"
+			},
+			"pFileName": {
+				"type": "String",
+				"defaultValue": "drivers.json"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().pFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().pFolderPath",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().pContainer",
+					"type": "Expression"
+				}
+			},
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects",
+				"encodingName": "UTF-8"
+			}
+		},
+		"schema": [
+			{
+				"name": "driverId",
+				"type": "Int64"
+			},
+			{
+				"name": "driverRef",
+				"type": "String"
+			},
+			{
+				"name": "number",
+				"type": "String"
+			},
+			{
+				"name": "code",
+				"type": "String"
+			},
+			{
+				"name": "name",
+				"type": "Object"
+			},
+			{
+				"name": "dob",
+				"type": "String"
+			},
+			{
+				"name": "nationality",
+				"type": "String"
+			},
+			{
+				"name": "url",
+				"type": "String"
+			}
+		]
+	}
+}
