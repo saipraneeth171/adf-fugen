@@ -7,13 +7,16 @@
 		},
 		"parameters": {
 			"pContainer": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "f1-data"
 			},
 			"pFolderPath": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "incoming/circuits"
 			},
 			"pFileName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "circuits.csv"
 			}
 		},
 		"annotations": [],
