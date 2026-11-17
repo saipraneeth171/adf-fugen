@@ -1,0 +1,152 @@
+{
+	"name": "PL_F1_Load",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set_BatchID",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "vBatchID",
+					"value": {
+						"value": "@string(ticks(utcNow()))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If_Source_Is_CSV",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set_BatchID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(toUpper(pipeline().parameters.SourceFormat),'CSV')",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Execute_JSONL_CheckAndCopy",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PL_F1_CheckAndCopy_JSONL",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"EntityName": {
+										"value": "@pipeline().parameters.EntityName",
+										"type": "Expression"
+									},
+									"FileName": {
+										"value": "@pipeline().parameters.FileName",
+										"type": "Expression"
+									},
+									"FolderPath": {
+										"value": "@pipeline().parameters.FolderPath",
+										"type": "Expression"
+									},
+									"StagingTable": {
+										"value": "@pipeline().parameters.StagingTable",
+										"type": "Expression"
+									},
+									"BatchID": {
+										"value": "@variables('vBatchID')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Execute_CSV_CheckAndCopy",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PL_F1_CheckAndCopy_CSV",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"EntityName": {
+										"value": "@pipeline().parameters.EntityName",
+										"type": "Expression"
+									},
+									"FileName": {
+										"value": "@pipeline().parameters.FileName",
+										"type": "Expression"
+									},
+									"FolderPath": {
+										"value": "@pipeline().parameters.FolderPath",
+										"type": "Expression"
+									},
+									"StagingTable": {
+										"value": "@pipeline().parameters.StagingTable",
+										"type": "Expression"
+									},
+									"BatchID": {
+										"value": "@variables('vBatchID')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"EntityName": {
+				"type": "String"
+			},
+			"FileName": {
+				"type": "String"
+			},
+			"FolderPath": {
+				"type": "String"
+			},
+			"StagingTable": {
+				"type": "String"
+			},
+			"LoadType": {
+				"type": "String"
+			},
+			"SourceFormat": {
+				"type": "String"
+			}
+		},
+		"variables": {
+			"vBatchID": {
+				"type": "String"
+			}
+		},
+		"annotations": [
+			"Corrected parent dispatcher: no IfCondition nested inside another IfCondition",
+			"Each child pipeline contains Get Metadata followed by one IfCondition with Copy or Fail"
+		]
+	}
+}
