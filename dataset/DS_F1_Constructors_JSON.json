@@ -1,0 +1,65 @@
+{
+	"name": "DS_F1_Constructors_JSON",
+	"properties": {
+		"parameters": {
+			"pContainer": {
+				"type": "String",
+				"defaultValue": "f1-data"
+			},
+			"pFolderPath": {
+				"type": "String",
+				"defaultValue": "incoming/constructors"
+			},
+			"pFileName": {
+				"type": "String",
+				"defaultValue": "constructors.json"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().pFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().pFolderPath",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().pContainer",
+					"type": "Expression"
+				}
+			},
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects",
+				"encodingName": "UTF-8"
+			}
+		},
+		"schema": [
+			{
+				"name": "constructorId",
+				"type": "Int64"
+			},
+			{
+				"name": "constructorRef",
+				"type": "String"
+			},
+			{
+				"name": "name",
+				"type": "String"
+			},
+			{
+				"name": "nationality",
+				"type": "String"
+			},
+			{
+				"name": "url",
+				"type": "String"
+			}
+		]
+	}
+}
