@@ -1,0 +1,101 @@
+{
+	"name": "PL_F1_Master",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_Metadata",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.00:10:00",
+					"retry": 2,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT EntityName, FileName, FolderPath, SourceFormat, StagingTable, LoadType, LoadOrder FROM ctl.F1_Metadata WHERE IsActive = 1 ORDER BY LoadOrder;",
+						"queryTimeout": "00:02:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_F1_SQL",
+						"type": "DatasetReference",
+						"parameters": {
+							"pSchema": "ctl",
+							"pTable": "F1_Metadata"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach_Entity",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_Metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_Metadata').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Execute_PL_F1_Load",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"waitOnCompletion": true,
+								"parameters": {
+									"EntityName": {
+										"value": "@item().EntityName",
+										"type": "Expression"
+									},
+									"FileName": {
+										"value": "@item().FileName",
+										"type": "Expression"
+									},
+									"FolderPath": {
+										"value": "@item().FolderPath",
+										"type": "Expression"
+									},
+									"StagingTable": {
+										"value": "@item().StagingTable",
+										"type": "Expression"
+									},
+									"LoadType": {
+										"value": "@item().LoadType",
+										"type": "Expression"
+									},
+									"SourceFormat": {
+										"value": "@item().SourceFormat",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": [
+			"Formula 1 metadata-driven master pipeline",
+			"Runs entities sequentially in metadata LoadOrder"
+		]
+	}
+}
