@@ -63,6 +63,16 @@
 				"name": "url",
 				"type": "nvarchar"
 			}
-		]
+		],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().pSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().pTable",
+				"type": "Expression"
+			}
+		}
 	}
 }
