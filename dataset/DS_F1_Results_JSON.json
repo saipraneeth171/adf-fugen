@@ -1,0 +1,117 @@
+{
+	"name": "DS_F1_Results_JSON",
+	"properties": {
+		"parameters": {
+			"pContainer": {
+				"type": "String",
+				"defaultValue": "f1-data"
+			},
+			"pFolderPath": {
+				"type": "String",
+				"defaultValue": "incoming/results"
+			},
+			"pFileName": {
+				"type": "String",
+				"defaultValue": "results.json"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().pFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().pFolderPath",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().pContainer",
+					"type": "Expression"
+				}
+			},
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects",
+				"encodingName": "UTF-8"
+			}
+		},
+		"schema": [
+			{
+				"name": "resultId",
+				"type": "Int64"
+			},
+			{
+				"name": "raceId",
+				"type": "Int64"
+			},
+			{
+				"name": "driverId",
+				"type": "Int64"
+			},
+			{
+				"name": "constructorId",
+				"type": "Int64"
+			},
+			{
+				"name": "number",
+				"type": "String"
+			},
+			{
+				"name": "grid",
+				"type": "Int64"
+			},
+			{
+				"name": "position",
+				"type": "String"
+			},
+			{
+				"name": "positionText",
+				"type": "String"
+			},
+			{
+				"name": "positionOrder",
+				"type": "Int64"
+			},
+			{
+				"name": "points",
+				"type": "Decimal"
+			},
+			{
+				"name": "laps",
+				"type": "Int64"
+			},
+			{
+				"name": "time",
+				"type": "String"
+			},
+			{
+				"name": "milliseconds",
+				"type": "String"
+			},
+			{
+				"name": "fastestLap",
+				"type": "String"
+			},
+			{
+				"name": "rank",
+				"type": "Int64"
+			},
+			{
+				"name": "fastestLapTime",
+				"type": "String"
+			},
+			{
+				"name": "fastestLapSpeed",
+				"type": "String"
+			},
+			{
+				"name": "statusId",
+				"type": "Int64"
+			}
+		]
+	}
+}
