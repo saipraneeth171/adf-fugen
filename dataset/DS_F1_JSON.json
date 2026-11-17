@@ -38,25 +38,6 @@
 				}
 			}
 		},
-		"schema": {
-			"type": "object",
-			"properties": {
-				"constructorId": {
-					"type": "integer"
-				},
-				"constructorRef": {
-					"type": "string"
-				},
-				"name": {
-					"type": "string"
-				},
-				"nationality": {
-					"type": "string"
-				},
-				"url": {
-					"type": "string"
-				}
-			}
-		}
+		"schema": {}
 	}
 }
