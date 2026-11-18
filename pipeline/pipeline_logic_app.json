@@ -13,7 +13,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "vEmployeeName",
-					"value": "12"
+					"value": "\"?!"
 				}
 			},
 			{
@@ -55,9 +55,9 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Set_Employee_Name",
+						"activity": "Fail1",
 						"dependencyConditions": [
-							"Failed"
+							"Succeeded"
 						]
 					}
 				],
@@ -82,6 +82,23 @@
 						"value": "@concat(\n    '{\"pipelineName\":\"',pipeline().Pipeline,\n    '\",\"dataFactoryName\":\"',pipeline().DataFactory,\n    '\",\"runId\":\"',pipeline().RunId,\n    '\",\"employeeName\":\"',variables('vEmployeeName'),\n    '\",\"status\":\"Failed',\n    '\",\"message\":\"Pipeline execution failed\"}'\n)",
 						"type": "Expression"
 					}
+				}
+			},
+			{
+				"name": "Fail1",
+				"type": "Fail",
+				"dependsOn": [
+					{
+						"activity": "Set_Employee_Name",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "Intentional failure for testing",
+					"errorCode": "DEMO_FAILURE"
 				}
 			}
 		],
