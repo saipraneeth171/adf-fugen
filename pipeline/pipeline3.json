@@ -1,0 +1,153 @@
+{
+	"name": "pipeline3",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set_Employee_Name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "vEmployeeName",
+					"value": "Ravi"
+				}
+			},
+			{
+				"name": "Check_Pipeline_Status",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set_Employee_Name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@pipeline().parameters.pForceFailure",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Fail_Activity",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "Intentional failure for notification testing",
+								"errorCode": "DEMO_FAILURE"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Send_Success_Notification",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Check_Pipeline_Status",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.00:05:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": {
+						"value": "@pipeline().parameters.LogicAppUrl",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "@concat('{\"pipelineName\":\"',pipeline().Pipeline,'\",\"dataFactoryName\":\"',pipeline().DataFactory,'\",\"runId\":\"',pipeline().RunId,'\",\"employeeName\":\"',variables('vEmployeeName'),'\",\"status\":\"Succeeded\",\"message\":\"Pipeline executed successfully\"}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Send_Failure_Notification",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Check_Pipeline_Status",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.00:05:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": {
+						"value": "@pipeline().parameters.LogicAppUrl",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "@concat('{\"pipelineName\":\"',pipeline().Pipeline,'\",\"dataFactoryName\":\"',pipeline().DataFactory,'\",\"runId\":\"',pipeline().RunId,'\",\"employeeName\":\"',variables('vEmployeeName'),'\",\"status\":\"Failed\",\"message\":\"Pipeline execution failed. Check ADF Monitor.\"}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Fail_Pipeline",
+				"type": "Fail",
+				"dependsOn": [
+					{
+						"activity": "Send_Failure_Notification",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "Pipeline failed after failure notification was sent",
+					"errorCode": "PIPELINE_EXECUTION_FAILED"
+				}
+			}
+		],
+		"parameters": {
+			"LogicAppUrl": {
+				"type": "String"
+			},
+			"pForceFailure": {
+				"type": "Bool",
+				"defaultValue": false
+			}
+		},
+		"variables": {
+			"vEmployeeName": {
+				"type": "String",
+				"defaultValue": "Unknown"
+			}
+		},
+		"annotations": []
+	}
+}
