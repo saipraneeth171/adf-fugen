@@ -13,7 +13,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "vEmployeeName",
-					"value": "\"?!"
+					"value": "1"
 				}
 			},
 			{
@@ -110,7 +110,7 @@
 		"variables": {
 			"vEmployeeName": {
 				"type": "String",
-				"defaultValue": "1\""
+				"defaultValue": "12"
 			}
 		},
 		"annotations": []
