@@ -1,6 +1,10 @@
 {
 	"name": "DS_F1_Drivers_JSON",
 	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adlsgen2",
+			"type": "LinkedServiceReference"
+		},
 		"parameters": {
 			"pContainer": {
 				"type": "String",
@@ -18,6 +22,21 @@
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().pFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().pFolderPath",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().pContainer",
+					"type": "Expression"
+				}
+			},
 			"format": {
 				"type": "JsonFormat",
 				"filePattern": "setOfObjects",
