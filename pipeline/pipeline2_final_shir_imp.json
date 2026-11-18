@@ -15,17 +15,13 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"fieldList": [
-						"childItems"
-					],
-					"storeSettings": {
-						"type": "FileServerReadSettings",
-						"recursive": true,
-						"enablePartitionDiscovery": false
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
 					},
-					"formatSettings": {
-						"type": "BinaryReadSettings"
-					}
+					"fieldList": [
+						"columnCount"
+					]
 				}
 			},
 			{
@@ -62,24 +58,37 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "BinarySource",
-									"storeSettings": {
-										"type": "FileServerReadSettings",
-										"recursive": false,
-										"deleteFilesAfterCompletion": false
-									},
-									"formatSettings": {
-										"type": "BinaryReadSettings"
-									}
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "BinarySink",
-									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings"
-									}
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
 								},
-								"enableStaging": false
-							}
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_Control",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AzureSqlTable1",
+									"type": "DatasetReference"
+								}
+							]
 						}
 					]
 				}
