@@ -31,5 +31,6 @@
 			"schema": "raw",
 			"table": "Customer_Source"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

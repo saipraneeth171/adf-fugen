@@ -74,6 +74,8 @@
 		"annotations": [
 			"Formula 1 metadata-driven master pipeline",
 			"Runs entities sequentially in metadata LoadOrder"
-		]
-	}
+		],
+		"lastPublishTime": "2026-11-18T02:26:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }

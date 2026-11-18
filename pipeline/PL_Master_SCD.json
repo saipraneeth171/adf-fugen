@@ -70,7 +70,10 @@
 										"value": "@item().SourceTable",
 										"type": "Expression"
 									},
-									"TargetTable": "@item().TargetTable"
+									"TargetTable": {
+										"value": "@item().TargetTable",
+										"type": "Expression"
+									}
 								}
 							}
 						}
@@ -78,6 +81,8 @@
 				}
 			}
 		],
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2026-11-18T02:26:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }

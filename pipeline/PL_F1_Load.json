@@ -147,6 +147,8 @@
 		"annotations": [
 			"Corrected parent dispatcher: no IfCondition nested inside another IfCondition",
 			"Each child pipeline contains Get Metadata followed by one IfCondition with Copy or Fail"
-		]
-	}
+		],
+		"lastPublishTime": "2026-11-18T02:26:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }
