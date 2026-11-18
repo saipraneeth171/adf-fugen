@@ -271,6 +271,15 @@
 												"name": "statusId",
 												"type": "Int32"
 											}
+										},
+										{
+											"source": {
+												"path": "$['BatchID']"
+											},
+											"sink": {
+												"name": "BatchID",
+												"type": "Int64"
+											}
 										}
 									],
 									"collectionReference": "",
