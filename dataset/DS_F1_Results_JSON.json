@@ -1,6 +1,10 @@
 {
 	"name": "DS_F1_Results_JSON",
 	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adlsgen2",
+			"type": "LinkedServiceReference"
+		},
 		"parameters": {
 			"pContainer": {
 				"type": "String",
