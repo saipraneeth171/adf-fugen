@@ -43,39 +43,6 @@
 				"encodingName": "UTF-8"
 			}
 		},
-		"schema": [
-			{
-				"name": "driverId",
-				"type": "Int64"
-			},
-			{
-				"name": "driverRef",
-				"type": "String"
-			},
-			{
-				"name": "number",
-				"type": "String"
-			},
-			{
-				"name": "code",
-				"type": "String"
-			},
-			{
-				"name": "name",
-				"type": "Object"
-			},
-			{
-				"name": "dob",
-				"type": "String"
-			},
-			{
-				"name": "nationality",
-				"type": "String"
-			},
-			{
-				"name": "url",
-				"type": "String"
-			}
-		]
+		"schema": {}
 	}
 }
