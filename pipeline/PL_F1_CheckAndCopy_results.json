@@ -112,6 +112,33 @@
 									"mappings": [
 										{
 											"source": {
+												"path": "$['resultId']"
+											},
+											"sink": {
+												"name": "resultId",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "$['raceId']"
+											},
+											"sink": {
+												"name": "raceId",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "$['driverId']"
+											},
+											"sink": {
+												"name": "driverId",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
 												"path": "$['constructorId']"
 											},
 											"sink": {
@@ -121,22 +148,128 @@
 										},
 										{
 											"source": {
-												"path": "$['constructorRef']"
+												"path": "$['number']"
+											},
+											"sink": {
+												"name": "number",
+												"type": "String"
 											}
 										},
 										{
 											"source": {
-												"path": "$['name']"
+												"path": "$['grid']"
+											},
+											"sink": {
+												"name": "grid",
+												"type": "Int32"
 											}
 										},
 										{
 											"source": {
-												"path": "$['nationality']"
+												"path": "$['position']"
+											},
+											"sink": {
+												"name": "position",
+												"type": "String"
 											}
 										},
 										{
 											"source": {
-												"path": "$['url']"
+												"path": "$['positionText']"
+											},
+											"sink": {
+												"name": "positionText",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['positionOrder']"
+											},
+											"sink": {
+												"name": "positionOrder",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "$['points']"
+											},
+											"sink": {
+												"name": "points",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"path": "$['laps']"
+											},
+											"sink": {
+												"name": "laps",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "$['time']"
+											},
+											"sink": {
+												"name": "time",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['milliseconds']"
+											},
+											"sink": {
+												"name": "milliseconds",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['fastestLap']"
+											},
+											"sink": {
+												"name": "fastestLap",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['rank']"
+											},
+											"sink": {
+												"name": "rank",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "$['fastestLapTime']"
+											},
+											"sink": {
+												"name": "fastestLapTime",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['fastestLapSpeed']"
+											},
+											"sink": {
+												"name": "fastestLapSpeed",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['statusId']"
+											},
+											"sink": {
+												"name": "statusId",
+												"type": "Int32"
 											}
 										}
 									],
