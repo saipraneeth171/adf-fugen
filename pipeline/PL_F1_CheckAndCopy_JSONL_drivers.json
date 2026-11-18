@@ -102,9 +102,13 @@
 									}
 								},
 								"sink": {
-									"type": "AzureSqlSink",
-									"writeBehavior": "insert",
-									"sqlWriterUseTableLock": false
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
 								},
 								"enableStaging": false,
 								"translator": {
@@ -193,8 +197,7 @@
 											}
 										}
 									],
-									"collectionReference": "",
-									"mapComplexValuesToString": false
+									"collectionReference": ""
 								}
 							},
 							"inputs": [
@@ -210,14 +213,12 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "DS_F1_SQL",
+									"referenceName": "DS_F1_Drivers_JSON",
 									"type": "DatasetReference",
 									"parameters": {
-										"pSchema": "raw",
-										"pTable": {
-											"value": "@pipeline().parameters.StagingTable",
-											"type": "Expression"
-										}
+										"pContainer": "f1-data",
+										"pFolderPath": "incoming/drivers",
+										"pFileName": "drivers.json"
 									}
 								}
 							]
