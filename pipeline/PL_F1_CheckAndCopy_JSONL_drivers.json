@@ -109,6 +109,91 @@
 								"enableStaging": false,
 								"translator": {
 									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "$['driverId']"
+											},
+											"sink": {
+												"name": "driverId",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "$['driverRef']"
+											},
+											"sink": {
+												"name": "driverRef",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['number']"
+											},
+											"sink": {
+												"name": "number",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['code']"
+											},
+											"sink": {
+												"name": "code",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['name']['forename']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['name']['surname']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['dob']"
+											},
+											"sink": {
+												"name": "dob",
+												"type": "Date"
+											}
+										},
+										{
+											"source": {
+												"path": "$['nationality']"
+											},
+											"sink": {
+												"name": "nationality",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['url']"
+											},
+											"sink": {
+												"name": "url",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['BatchID']"
+											},
+											"sink": {
+												"name": "BatchID",
+												"type": "Int64"
+											}
+										}
+									],
+									"collectionReference": "",
 									"mapComplexValuesToString": false
 								}
 							},
