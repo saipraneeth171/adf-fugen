@@ -1,0 +1,1211 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "fugenformal1"
+		},
+		"AzureSqlDatabase1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
+		},
+		"FileServer2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer2'"
+		},
+		"adlsgen2_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adlsgen2'"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://fugenacademykv.vault.azure.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "academyfugen.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "master"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladmin"
+		},
+		"FileServer2_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\Users\\Admin\\Downloads\\source"
+		},
+		"FileServer2_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "desktop-jc5dacm\\adflab"
+		},
+		"adlsgen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://fugennstorage.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Fail_Activity_Demo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Check_Mandatory_Columns",
+						"type": "IfCondition",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(1,2)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Fail_Invalid_Data",
+									"type": "Fail",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"message": "Mandatory customer columns are missing",
+										"errorCode": "INVALID_CUSTOMER_FILE"
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Valid_Data",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "Status",
+										"value": "Valid"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"Status": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Filter_Demo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Filter_CSV",
+						"type": "Filter",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('FileList')",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@and(equals(item().type,'File'),endsWith(toLower(item().name),'.csv'))",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"FileList": {
+						"type": "Array",
+						"defaultValue": [
+							{
+								"name": "customers.csv",
+								"type": "File"
+							},
+							{
+								"name": "orders.csv",
+								"type": "File"
+							},
+							{
+								"name": "employees.json",
+								"type": "File"
+							},
+							{
+								"name": "products.parquet",
+								"type": "File"
+							}
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_ForEach_Demo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach_Employee",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('EmployeeList')",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Set_Current_Employee",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "CurrentEmployee",
+										"value": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"EmployeeList": {
+						"type": "Array",
+						"defaultValue": [
+							"Ravi",
+							"Priya",
+							"Kumar",
+							"Anil",
+							"Sneha"
+						]
+					},
+					"CurrentEmployee": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Load_Customers')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set_Customer_Message",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Message",
+							"value": "Customer pipeline executed successfully"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"Message": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Load_Orders')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set_Orders_Message",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Message",
+							"value": "Orders pipeline executed successfully"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"Message": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_REST_API_All_Methods')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GET_Request",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:05:00",
+							"retry": 1,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "GET",
+							"headers": {},
+							"url": "https://jsonplaceholder.typicode.com/posts/1"
+						}
+					},
+					{
+						"name": "POST_Request",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "GET_Request",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.00:05:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"url": "https://jsonplaceholder.typicode.com/posts",
+							"body": "{ \"title\": \"ADF Training\", \"body\": \"POST API demonstration\", \"userId\": 1 }"
+						}
+					},
+					{
+						"name": "PUT_Request",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "POST_Request",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.00:05:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "PUT",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"url": "https://jsonplaceholder.typicode.com/posts/1",
+							"body": "{ \"id\": 1, \"title\": \"ADF Updated Title\", \"body\": \"Complete record updated using PUT\", \"userId\": 1 }"
+						}
+					},
+					{
+						"name": "PATCH_Request",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "PUT_Request",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.00:05:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "PATCH",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"url": "https://jsonplaceholder.typicode.com/posts/1",
+							"body": "{ \"title\": \"ADF Partial Update\" }"
+						}
+					},
+					{
+						"name": "DELETE_Request",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "PATCH_Request",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.00:05:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "DELETE",
+							"headers": {},
+							"url": "https://jsonplaceholder.typicode.com/posts/1"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-11-18T02:26:16Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Sales_API_Ingestion')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Call_Sales_API",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.01:00:00",
+							"retry": 3,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "GET",
+							"headers": {},
+							"url": {
+								"value": "https://jsonplaceholder.typicode.com/posts",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"BusinessDate": {
+						"type": "String",
+						"defaultValue": "2026-11-09"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_SetVariable_Demo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set_Employee_Name",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "vEmployeeName",
+							"value": "Ravi"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"vEmployeeName": {
+						"type": "String",
+						"defaultValue": "Unknown"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Webhook_Customer_Validation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait_For_Customer_Validation",
+						"type": "WebHook",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://your-company-api.com/validate-customer",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"body": {
+								"fileName": "customers_20261109.csv",
+								"container": "source",
+								"validationType": "CustomerSchema"
+							},
+							"timeout": "00:15:00",
+							"reportStatusOnCallBack": true
+						}
+					},
+					{
+						"name": "Continue_Data_Load",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Wait_For_Customer_Validation",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Status",
+							"value": "Validation Completed"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"Status": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set_Employee_Name",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "vEmployeeName",
+							"value": "Ravi"
+						}
+					},
+					{
+						"name": "Check_Pipeline_Status",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Set_Employee_Name",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@pipeline().parameters.pForceFailure",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Fail_Activity",
+									"type": "Fail",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"message": "Intentional failure for notification testing",
+										"errorCode": "DEMO_FAILURE"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Send_Success_Notification",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Check_Pipeline_Status",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.00:05:00",
+							"retry": 1,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"url": {
+								"value": "@pipeline().parameters.LogicAppUrl",
+								"type": "Expression"
+							},
+							"body": {
+								"value": "@concat('{\"pipelineName\":\"',pipeline().Pipeline,'\",\"dataFactoryName\":\"',pipeline().DataFactory,'\",\"runId\":\"',pipeline().RunId,'\",\"employeeName\":\"',variables('vEmployeeName'),'\",\"status\":\"Succeeded\",\"message\":\"Pipeline executed successfully\"}')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Send_Failure_Notification",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Check_Pipeline_Status",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.00:05:00",
+							"retry": 1,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"url": {
+								"value": "@pipeline().parameters.LogicAppUrl",
+								"type": "Expression"
+							},
+							"body": {
+								"value": "@concat('{\"pipelineName\":\"',pipeline().Pipeline,'\",\"dataFactoryName\":\"',pipeline().DataFactory,'\",\"runId\":\"',pipeline().RunId,'\",\"employeeName\":\"',variables('vEmployeeName'),'\",\"status\":\"Failed\",\"message\":\"Pipeline execution failed. Check ADF Monitor.\"}')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Fail_Pipeline",
+						"type": "Fail",
+						"dependsOn": [
+							{
+								"activity": "Send_Failure_Notification",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"message": "Pipeline failed after failure notification was sent",
+							"errorCode": "PIPELINE_EXECUTION_FAILED"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"LogicAppUrl": {
+						"type": "String"
+					},
+					"pForceFailure": {
+						"type": "Bool",
+						"defaultValue": false
+					}
+				},
+				"variables": {
+					"vEmployeeName": {
+						"type": "String",
+						"defaultValue": "Unknown"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_logic_app')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set_Employee_Name",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "vEmployeeName",
+							"value": "1"
+						}
+					},
+					{
+						"name": "Send_Success_Notification",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Set_Employee_Name",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.00:05:00",
+							"retry": 1,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"url": {
+								"value": "@pipeline().parameters.LogicAppUrl",
+								"type": "Expression"
+							},
+							"body": {
+								"value": "@concat(\n    '{\"pipelineName\":\"',pipeline().Pipeline,\n    '\",\"dataFactoryName\":\"',pipeline().DataFactory,\n    '\",\"runId\":\"',pipeline().RunId,\n    '\",\"employeeName\":\"',variables('vEmployeeName'),\n    '\",\"status\":\"Succeeded',\n    '\",\"message\":\"Pipeline executed successfully\"}'\n)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Send_Failure_Notification",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Fail1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.00:05:00",
+							"retry": 1,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"url": {
+								"value": "@pipeline().parameters.LogicAppUrl",
+								"type": "Expression"
+							},
+							"body": {
+								"value": "@concat(\n    '{\"pipelineName\":\"',pipeline().Pipeline,\n    '\",\"dataFactoryName\":\"',pipeline().DataFactory,\n    '\",\"runId\":\"',pipeline().RunId,\n    '\",\"employeeName\":\"',variables('vEmployeeName'),\n    '\",\"status\":\"Failed',\n    '\",\"message\":\"Pipeline execution failed\"}'\n)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Fail1",
+						"type": "Fail",
+						"dependsOn": [
+							{
+								"activity": "Set_Employee_Name",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"message": "Intentional failure for testing",
+							"errorCode": "DEMO_FAILURE"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"LogicAppUrl": {
+						"type": "String"
+					}
+				},
+				"variables": {
+					"vEmployeeName": {
+						"type": "String",
+						"defaultValue": "12"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_setvariable_appendvariable')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "new",
+							"value": []
+						}
+					},
+					{
+						"name": "Append variable1",
+						"type": "AppendVariable",
+						"dependsOn": [
+							{
+								"activity": "Set variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "new",
+							"value": "circuits.csv"
+						}
+					},
+					{
+						"name": "Append variable2",
+						"type": "AppendVariable",
+						"dependsOn": [
+							{
+								"activity": "Set variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "new",
+							"value": "races.csv"
+						}
+					},
+					{
+						"name": "Set variable2",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Append variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Append variable2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "result",
+							"value": {
+								"value": "@string(variables('new'))",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"new": {
+						"type": "Array",
+						"defaultValue": []
+					},
+					"result": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_switch_filetype')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Switch1",
+						"type": "Switch",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"on": {
+								"value": "@pipeline().parameters.fileType",
+								"type": "Expression"
+							},
+							"cases": [
+								{
+									"value": "csv",
+									"activities": [
+										{
+											"name": "Set variable1",
+											"type": "SetVariable",
+											"dependsOn": [],
+											"policy": {
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "resultMessage",
+												"value": "csv file selected"
+											}
+										}
+									]
+								},
+								{
+									"value": "json",
+									"activities": [
+										{
+											"name": "Set variable2",
+											"type": "SetVariable",
+											"dependsOn": [],
+											"policy": {
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "resultMessage",
+												"value": "json file selected."
+											}
+										}
+									]
+								}
+							],
+							"defaultActivities": [
+								{
+									"name": "Set variable3",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "resultMessage",
+										"value": "unsupported file format"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"fileType": {
+						"type": "string",
+						"defaultValue": "csv"
+					}
+				},
+				"variables": {
+					"resultMessage": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabase1_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileServer2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileServer2_properties_typeProperties_host')]",
+					"userId": "[parameters('FileServer2_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileServer2_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adlsgen2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('adlsgen2_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('adlsgen2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TR_F1_Daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2026-11-17T02:00:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Master')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute_Customers",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_Load_Customers",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Execute_Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute_Customers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_Load_Orders",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Load_Customers')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_Load_Orders')]"
+			]
+		}
+	]
+}

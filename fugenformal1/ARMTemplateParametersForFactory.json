@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "fugenformal1"
+		},
+		"AzureSqlDatabase1_password": {
+			"value": ""
+		},
+		"FileServer2_password": {
+			"value": ""
+		},
+		"FileServer3_password": {
+			"value": ""
+		},
+		"adlsgen2_accountKey": {
+			"value": ""
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://fugenacademykv.vault.azure.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "academyfugen.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "master"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "sqladmin"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_server": {
+			"value": "@{linkedService().pServerName}"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_database": {
+			"value": "@{linkedService().pDatabaseName}"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_userName": {
+			"value": "@{linkedService().pUserName}"
+		},
+		"FileServer2_properties_typeProperties_host": {
+			"value": "C:\\Users\\Admin\\Downloads\\source"
+		},
+		"FileServer2_properties_typeProperties_userId": {
+			"value": "desktop-jc5dacm\\adflab"
+		},
+		"FileServer3_properties_typeProperties_host": {
+			"value": "D:\\adf_lab\\source"
+		},
+		"FileServer3_properties_typeProperties_userId": {
+			"value": "desktop-jc5dacm\\adflab"
+		},
+		"adlsgen2_properties_typeProperties_url": {
+			"value": "https://fugennstorage.dfs.core.windows.net/"
+		},
+		"trigger1_properties_typeProperties_scope": {
+			"value": "/subscriptions/f8bd2af8-fe0f-4c8e-a810-7e628fd0139b/resourceGroups/fugen/providers/Microsoft.Storage/storageAccounts/fugenstorage"
+		}
+	}
+}

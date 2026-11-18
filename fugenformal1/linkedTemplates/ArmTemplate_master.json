@@ -1,0 +1,221 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "fugenformal1"
+		},
+		"AzureSqlDatabase1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
+		},
+		"FileServer2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer2'"
+		},
+		"FileServer3_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer3'"
+		},
+		"adlsgen2_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adlsgen2'"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://fugenacademykv.vault.azure.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "academyfugen.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "master"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladmin"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "@{linkedService().pServerName}"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{linkedService().pDatabaseName}"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "@{linkedService().pUserName}"
+		},
+		"FileServer2_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\Users\\Admin\\Downloads\\source"
+		},
+		"FileServer2_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "desktop-jc5dacm\\adflab"
+		},
+		"FileServer3_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\adf_lab\\source"
+		},
+		"FileServer3_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "desktop-jc5dacm\\adflab"
+		},
+		"adlsgen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://fugennstorage.dfs.core.windows.net/"
+		},
+		"trigger1_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/f8bd2af8-fe0f-4c8e-a810-7e628fd0139b/resourceGroups/fugen/providers/Microsoft.Storage/storageAccounts/fugenstorage"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "fugenformal1_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabase1_password": {
+						"value": "[parameters('AzureSqlDatabase1_password')]"
+					},
+					"FileServer2_password": {
+						"value": "[parameters('FileServer2_password')]"
+					},
+					"adlsgen2_accountKey": {
+						"value": "[parameters('adlsgen2_accountKey')]"
+					},
+					"AzureKeyVault1_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]"
+					},
+					"FileServer2_properties_typeProperties_host": {
+						"value": "[parameters('FileServer2_properties_typeProperties_host')]"
+					},
+					"FileServer2_properties_typeProperties_userId": {
+						"value": "[parameters('FileServer2_properties_typeProperties_userId')]"
+					},
+					"adlsgen2_properties_typeProperties_url": {
+						"value": "[parameters('adlsgen2_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "fugenformal1_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'fugenformal1_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "fugenformal1_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"FileServer3_password": {
+						"value": "[parameters('FileServer3_password')]"
+					},
+					"AzureSqlDatabase2_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDatabase2_properties_typeProperties_server')]"
+					},
+					"AzureSqlDatabase2_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDatabase2_properties_typeProperties_database')]"
+					},
+					"AzureSqlDatabase2_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlDatabase2_properties_typeProperties_userName')]"
+					},
+					"FileServer3_properties_typeProperties_host": {
+						"value": "[parameters('FileServer3_properties_typeProperties_host')]"
+					},
+					"FileServer3_properties_typeProperties_userId": {
+						"value": "[parameters('FileServer3_properties_typeProperties_userId')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'fugenformal1_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "fugenformal1_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"trigger1_properties_typeProperties_scope": {
+						"value": "[parameters('trigger1_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'fugenformal1_ArmTemplate_2')]"
+			]
+		}
+	]
+}
