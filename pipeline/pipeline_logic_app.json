@@ -45,7 +45,7 @@
 						"type": "Expression"
 					},
 					"body": {
-						"value": "@concat('{\"pipelineName\":\"',pipeline().Pipeline,'\",\"dataFactoryName\":\"',pipeline().DataFactory,'\",\"runId\":\"',pipeline().RunId,'\",\"employeeName\":\"',variables('vEmployeeName'),'\",\"status\":\"Succeeded\",\"message\":\"Pipeline executed successfully\"}')",
+						"value": "@concat(\n    '{\"pipelineName\":\"',pipeline().Pipeline,\n    '\",\"dataFactoryName\":\"',pipeline().DataFactory,\n    '\",\"runId\":\"',pipeline().RunId,\n    '\",\"employeeName\":\"',variables('vEmployeeName'),\n    '\",\"status\":\"Succeeded',\n    '\",\"message\":\"Pipeline executed successfully\"}'\n)",
 						"type": "Expression"
 					}
 				}
@@ -79,7 +79,7 @@
 						"type": "Expression"
 					},
 					"body": {
-						"value": "@concat('{\"pipelineName\":\"',pipeline().Pipeline,'\",\"dataFactoryName\":\"',pipeline().DataFactory,'\",\"runId\":\"',pipeline().RunId,'\",\"employeeName\":\"',variables('vEmployeeName'),'\",\"status\":\"Failed\",\"message\":\"Set Employee Name activity failed\"}')",
+						"value": "@concat(\n    '{\"pipelineName\":\"',pipeline().Pipeline,\n    '\",\"dataFactoryName\":\"',pipeline().DataFactory,\n    '\",\"runId\":\"',pipeline().RunId,\n    '\",\"employeeName\":\"',variables('vEmployeeName'),\n    '\",\"status\":\"Failed',\n    '\",\"message\":\"Pipeline execution failed\"}'\n)",
 						"type": "Expression"
 					}
 				}
