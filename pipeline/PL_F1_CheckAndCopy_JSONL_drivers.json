@@ -33,7 +33,14 @@
 						"size",
 						"lastModified",
 						"itemName"
-					]
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
 				}
 			},
 			{
@@ -102,13 +109,9 @@
 									}
 								},
 								"sink": {
-									"type": "JsonSink",
-									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings"
-									},
-									"formatSettings": {
-										"type": "JsonWriteSettings"
-									}
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
 								},
 								"enableStaging": false,
 								"translator": {
@@ -117,72 +120,45 @@
 										{
 											"source": {
 												"path": "$['driverId']"
-											},
-											"sink": {
-												"path": "$['driverId']"
 											}
 										},
 										{
 											"source": {
-												"path": "$['driverRef']"
-											},
-											"sink": {
 												"path": "$['driverRef']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['number']"
-											},
-											"sink": {
-												"path": "$['number']"
 											}
 										},
 										{
 											"source": {
-												"path": "$['code']"
-											},
-											"sink": {
 												"path": "$['code']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['name']['forename']"
-											},
-											"sink": {
-												"path": "$['name']['forename']"
 											}
 										},
 										{
 											"source": {
-												"path": "$['name']['surname']"
-											},
-											"sink": {
 												"path": "$['name']['surname']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['dob']"
-											},
-											"sink": {
-												"path": "$['dob']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['nationality']"
-											},
-											"sink": {
-												"path": "$['nationality']"
 											}
 										},
 										{
 											"source": {
-												"path": "$['url']"
-											},
-											"sink": {
 												"path": "$['url']"
 											}
 										},
@@ -192,7 +168,8 @@
 											}
 										}
 									],
-									"collectionReference": ""
+									"collectionReference": "",
+									"mapComplexValuesToString": false
 								}
 							},
 							"inputs": [
@@ -208,12 +185,11 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "DS_F1_Drivers_JSON",
+									"referenceName": "DS_F1_SQL",
 									"type": "DatasetReference",
 									"parameters": {
-										"pContainer": "f1-data",
-										"pFolderPath": "incoming/drivers",
-										"pFileName": "drivers.json"
+										"pSchema": "raw",
+										"pTable": "@pipeline().parameters.StagingTable"
 									}
 								}
 							]
