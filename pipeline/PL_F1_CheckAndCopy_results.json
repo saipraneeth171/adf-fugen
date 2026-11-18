@@ -92,6 +92,15 @@
 							"typeProperties": {
 								"source": {
 									"type": "JsonSource",
+									"additionalColumns": [
+										{
+											"name": "BatchID",
+											"value": {
+												"value": "@pipeline().parameters.BatchID",
+												"type": "Expression"
+											}
+										}
+									],
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
