@@ -119,8 +119,7 @@
 												"path": "$['driverId']"
 											},
 											"sink": {
-												"name": "driverId",
-												"type": "Int32"
+												"path": "$['driverId']"
 											}
 										},
 										{
@@ -128,8 +127,7 @@
 												"path": "$['driverRef']"
 											},
 											"sink": {
-												"name": "driverRef",
-												"type": "String"
+												"path": "$['driverRef']"
 											}
 										},
 										{
@@ -137,8 +135,7 @@
 												"path": "$['number']"
 											},
 											"sink": {
-												"name": "number",
-												"type": "String"
+												"path": "$['number']"
 											}
 										},
 										{
@@ -146,17 +143,22 @@
 												"path": "$['code']"
 											},
 											"sink": {
-												"name": "code",
-												"type": "String"
+												"path": "$['code']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['name']['forename']"
+											},
+											"sink": {
+												"path": "$['name']['forename']"
 											}
 										},
 										{
 											"source": {
+												"path": "$['name']['surname']"
+											},
+											"sink": {
 												"path": "$['name']['surname']"
 											}
 										},
@@ -165,8 +167,7 @@
 												"path": "$['dob']"
 											},
 											"sink": {
-												"name": "dob",
-												"type": "Date"
+												"path": "$['dob']"
 											}
 										},
 										{
@@ -174,8 +175,7 @@
 												"path": "$['nationality']"
 											},
 											"sink": {
-												"name": "nationality",
-												"type": "String"
+												"path": "$['nationality']"
 											}
 										},
 										{
@@ -183,17 +183,12 @@
 												"path": "$['url']"
 											},
 											"sink": {
-												"name": "url",
-												"type": "String"
+												"path": "$['url']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['BatchID']"
-											},
-											"sink": {
-												"name": "BatchID",
-												"type": "Int64"
 											}
 										}
 									],
