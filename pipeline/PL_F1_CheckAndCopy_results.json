@@ -109,17 +109,49 @@
 								"enableStaging": false,
 								"translator": {
 									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "$['constructorId']"
+											},
+											"sink": {
+												"name": "constructorId",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "$['constructorRef']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['name']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['nationality']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['url']"
+											}
+										}
+									],
+									"collectionReference": "",
 									"mapComplexValuesToString": false
 								}
 							},
 							"inputs": [
 								{
-									"referenceName": "DS_F1_Drivers_JSON",
+									"referenceName": "DS_F1_Results_JSON",
 									"type": "DatasetReference",
 									"parameters": {
 										"pContainer": "f1-data",
-										"pFolderPath": "incoming/constructors",
-										"pFileName": "constructors.json"
+										"pFolderPath": "incoming/results",
+										"pFileName": "results.json"
 									}
 								}
 							],
