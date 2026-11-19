@@ -530,7 +530,7 @@
 								"Content-Type": "application/json"
 							},
 							"body": {
-								"fileName": "customers_20261109.csv",
+								"fileName": "customers.csv",
 								"container": "source",
 								"validationType": "CustomerSchema"
 							},
