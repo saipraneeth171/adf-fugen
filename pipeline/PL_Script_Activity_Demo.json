@@ -22,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "INSERT INTO raw.ADF_ScriptLog (Message) VALUES ('Executed from ADF Script Activity');"
+							"text": "INSERT INTO dbo.ADF_ScriptLog (Message) VALUES ('Executed from ADF Script Activity');"
 						}
 					],
 					"scriptBlockExecutionTimeout": "00:05:00"
