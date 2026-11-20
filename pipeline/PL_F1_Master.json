@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT EntityName, FileName, FolderPath, SourceFormat, StagingTable, LoadType, LoadOrder FROM ctl.F1_Metadata WHERE IsActive = 1 ORDER BY LoadOrder;",
+						"sqlReaderQuery": "SELECT EntityName, FileName, FolderPath, SourceFormat, StagingTable, LoadOrder FROM ctl.F1_Metadata WHERE IsActive = 1 ORDER BY LoadOrder;",
 						"queryTimeout": "00:02:00",
 						"partitionOption": "None"
 					},
@@ -61,21 +61,53 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "PL_F1_CheckAndCopy_CSV",
+									"referenceName": "PL_F1_Load",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"EntityName": {
+										"value": "@item().EntityName",
+										"type": "Expression"
+									},
+									"FileName": {
+										"value": "@item().FileName",
+										"type": "Expression"
+									},
+									"FolderPath": {
+										"value": "@item().FolderPath",
+										"type": "Expression"
+									},
+									"SourceFormat": {
+										"value": "@item().SourceFormat",
+										"type": "Expression"
+									},
+									"StagingTable": {
+										"value": "@item().StagingTable",
+										"type": "Expression"
+									},
+									"LoadType": {
+										"value": "@pipeline().parameters.LoadType",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
 				}
 			}
 		],
+		"parameters": {
+			"LoadType": {
+				"type": "String",
+				"defaultValue": "FULL"
+			}
+		},
 		"annotations": [
-			"Formula 1 metadata-driven master pipeline",
-			"Runs entities sequentially in metadata LoadOrder"
-		],
-		"lastPublishTime": "2026-11-18T02:26:17Z"
+			"Formula 1 metadata-driven Master pipeline",
+			"Supports Full and Incremental loading",
+			"Runs entities sequentially"
+		]
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
