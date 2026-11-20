@@ -3,9 +3,40 @@
 	"properties": {
 		"activities": [
 			{
+				"name": "Validate_LoadType",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@or(equals(toUpper(pipeline().parameters.LoadType),'FULL'),equals(toUpper(pipeline().parameters.LoadType),'INCREMENTAL'))",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Fail_Invalid_LoadType",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "Invalid LoadType. Allowed values are FULL and INCREMENTAL.",
+								"errorCode": "F1_INVALID_LOAD_TYPE"
+							}
+						}
+					]
+				}
+			},
+			{
 				"name": "Set_BatchID",
 				"type": "SetVariable",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Validate_LoadType",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"secureOutput": false,
 					"secureInput": false
@@ -20,11 +51,57 @@
 				}
 			},
 			{
-				"name": "If_Source_Is_CSV",
+				"name": "If_LoadType_Full",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
 						"activity": "Set_BatchID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(toUpper(pipeline().parameters.LoadType),'FULL')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Truncate_Raw_Table",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.00:05:00",
+								"retry": 1,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "ctl.usp_TruncateRawTable",
+								"storedProcedureParameters": {
+									"StagingTable": {
+										"value": {
+											"value": "@pipeline().parameters.StagingTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If_Source_Is_CSV",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "If_LoadType_Full",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -117,6 +194,45 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Register_Successful_Batch",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "If_Source_Is_CSV",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.00:05:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "ctl.usp_RegisterBatch",
+					"storedProcedureParameters": {
+						"EntityName": {
+							"value": {
+								"value": "@pipeline().parameters.EntityName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"BatchID": {
+							"value": {
+								"value": "@variables('vBatchID')",
+								"type": "Expression"
+							},
+							"type": "Int64"
+						}
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -145,10 +261,11 @@
 			}
 		},
 		"annotations": [
-			"Corrected parent dispatcher: no IfCondition nested inside another IfCondition",
-			"Each child pipeline contains Get Metadata followed by one IfCondition with Copy or Fail"
-		],
-		"lastPublishTime": "2026-11-18T02:26:17Z"
+			"Formula 1 Full and Incremental Load dispatcher",
+			"FULL truncates the selected Raw table before Copy",
+			"INCREMENTAL appends records without truncating",
+			"Batch is registered only after successful Copy"
+		]
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
