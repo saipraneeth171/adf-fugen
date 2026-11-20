@@ -201,7 +201,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "PL_F1_CheckAndCopy_JSONL",
+											"referenceName": "PL_F1_CheckAndCopy_Constructors",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
