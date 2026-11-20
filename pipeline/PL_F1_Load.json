@@ -23,69 +23,244 @@
 								"errorCode": "F1_INVALID_LOAD_TYPE"
 							}
 						}
-					]
-				}
-			},
-			{
-				"name": "Set_BatchID",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Validate_LoadType",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "vBatchID",
-					"value": {
-						"value": "@string(ticks(utcNow()))",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "If_LoadType_Full",
-				"type": "IfCondition",
-				"dependsOn": [
-					{
-						"activity": "Set_BatchID",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"expression": {
-						"value": "@equals(toUpper(pipeline().parameters.LoadType),'FULL')",
-						"type": "Expression"
-					},
+					],
 					"ifTrueActivities": [
 						{
-							"name": "Truncate_Raw_Table",
-							"type": "SqlServerStoredProcedure",
+							"name": "Set_BatchID",
+							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
-								"timeout": "0.00:05:00",
-								"retry": 1,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "vBatchID",
+								"value": {
+									"value": "@string(ticks(utcNow()))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "If_LoadType_Full",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Set_BatchID",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(toUpper(pipeline().parameters.LoadType),'FULL')",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "SP_Check_Existing_Batch",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [],
+										"policy": {
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "[ctl].[usp_CheckBatch]",
+											"storedProcedureParameters": {
+												"EntityName": {
+													"value": {
+														"value": "@pipeline().parameters.EntityName",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"BatchID": {
+													"value": {
+														"value": "@variables('vBatchID')",
+														"type": "Expression"
+													},
+													"type": "Int64"
+												}
+											}
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "SP_Truncate_Raw_Table",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [],
+										"policy": {
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "[ctl].[usp_TruncateRawTable]",
+											"storedProcedureParameters": {
+												"StagingTable": {
+													"value": {
+														"value": "@pipeline().parameters.StagingTable",
+														"type": "Expression"
+													},
+													"type": "String"
+												}
+											}
+										},
+										"linkedServiceName": {
+											"referenceName": "AzureSqlDatabase1",
+											"type": "LinkedServiceReference"
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "If_Source_Is_CSV",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "If_LoadType_Full",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(toUpper(pipeline().parameters.SourceFormat),'CSV')",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "Execute_JSONL_Child",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"policy": {
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "PL_F1_CheckAndCopy_JSONL",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"EntityName": {
+													"value": "@pipeline().parameters.EntityName",
+													"type": "Expression"
+												},
+												"FileName": {
+													"value": "@pipeline().parameters.FileName",
+													"type": "Expression"
+												},
+												"FolderPath": {
+													"value": "@pipeline().parameters.FolderPath",
+													"type": "Expression"
+												},
+												"StagingTable": {
+													"value": "@pipeline().parameters.StagingTable",
+													"type": "Expression"
+												},
+												"BatchID": {
+													"value": "@variables('vBatchID')",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "Execute_CSV_Child",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"policy": {
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "PL_F1_CheckAndCopy_CSV",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"EntityName": {
+													"value": "@pipeline().parameters.EntityName",
+													"type": "Expression"
+												},
+												"FileName": {
+													"value": "@pipeline().parameters.FileName",
+													"type": "Expression"
+												},
+												"FolderPath": {
+													"value": "@pipeline().parameters.FolderPath",
+													"type": "Expression"
+												},
+												"StagingTable": {
+													"value": "@pipeline().parameters.StagingTable",
+													"type": "Expression"
+												},
+												"BatchID": {
+													"value": "@variables('vBatchID')",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "SP_Register_Successful_Batch",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "If_Source_Is_CSV",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"retry": 0,
 								"retryIntervalInSeconds": 30,
 								"secureOutput": false,
 								"secureInput": false
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "ctl.usp_TruncateRawTable",
+								"storedProcedureName": "[ctl].[usp_RegisterBatch]",
 								"storedProcedureParameters": {
-									"StagingTable": {
+									"EntityName": {
 										"value": {
-											"value": "@pipeline().parameters.StagingTable",
+											"value": "@pipeline().parameters.EntityName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"BatchID": {
+										"value": {
+											"value": "@variables('vBatchID')",
+											"type": "Expression"
+										},
+										"type": "Int64"
+									},
+									"LoadType": {
+										"value": {
+											"value": "@toUpper(pipeline().parameters.LoadType)",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -94,144 +269,6 @@
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "If_Source_Is_CSV",
-				"type": "IfCondition",
-				"dependsOn": [
-					{
-						"activity": "If_LoadType_Full",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"expression": {
-						"value": "@equals(toUpper(pipeline().parameters.SourceFormat),'CSV')",
-						"type": "Expression"
-					},
-					"ifFalseActivities": [
-						{
-							"name": "Execute_JSONL_CheckAndCopy",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "PL_F1_CheckAndCopy_JSONL",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"EntityName": {
-										"value": "@pipeline().parameters.EntityName",
-										"type": "Expression"
-									},
-									"FileName": {
-										"value": "@pipeline().parameters.FileName",
-										"type": "Expression"
-									},
-									"FolderPath": {
-										"value": "@pipeline().parameters.FolderPath",
-										"type": "Expression"
-									},
-									"StagingTable": {
-										"value": "@pipeline().parameters.StagingTable",
-										"type": "Expression"
-									},
-									"BatchID": {
-										"value": "@variables('vBatchID')",
-										"type": "Expression"
-									}
-								}
-							}
-						}
-					],
-					"ifTrueActivities": [
-						{
-							"name": "Execute_CSV_CheckAndCopy",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "PL_F1_CheckAndCopy_CSV",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"EntityName": {
-										"value": "@pipeline().parameters.EntityName",
-										"type": "Expression"
-									},
-									"FileName": {
-										"value": "@pipeline().parameters.FileName",
-										"type": "Expression"
-									},
-									"FolderPath": {
-										"value": "@pipeline().parameters.FolderPath",
-										"type": "Expression"
-									},
-									"StagingTable": {
-										"value": "@pipeline().parameters.StagingTable",
-										"type": "Expression"
-									},
-									"BatchID": {
-										"value": "@variables('vBatchID')",
-										"type": "Expression"
-									}
-								}
-							}
-						}
-					]
-				}
-			},
-			{
-				"name": "Register_Successful_Batch",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "If_Source_Is_CSV",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.00:05:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "ctl.usp_RegisterBatch",
-					"storedProcedureParameters": {
-						"EntityName": {
-							"value": {
-								"value": "@pipeline().parameters.EntityName",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"BatchID": {
-							"value": {
-								"value": "@variables('vBatchID')",
-								"type": "Expression"
-							},
-							"type": "Int64"
-						}
-					}
 				}
 			}
 		],
@@ -248,11 +285,12 @@
 			"StagingTable": {
 				"type": "String"
 			},
-			"LoadType": {
-				"type": "String"
-			},
 			"SourceFormat": {
 				"type": "String"
+			},
+			"LoadType": {
+				"type": "String",
+				"defaultValue": "FULL"
 			}
 		},
 		"variables": {
@@ -260,12 +298,6 @@
 				"type": "String"
 			}
 		},
-		"annotations": [
-			"Formula 1 Full and Incremental Load dispatcher",
-			"FULL truncates the selected Raw table before Copy",
-			"INCREMENTAL appends records without truncating",
-			"Batch is registered only after successful Copy"
-		]
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }
