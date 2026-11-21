@@ -97,12 +97,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"LoadType": {
-				"type": "String",
-				"defaultValue": "FULL"
-			}
-		},
 		"annotations": [
 			"Formula 1 metadata-driven Master pipeline",
 			"Supports Full and Incremental loading",
