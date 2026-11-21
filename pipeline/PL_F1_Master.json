@@ -7,8 +7,8 @@
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "0.00:10:00",
-					"retry": 2,
+					"timeout": "0.12:00:00",
+					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
@@ -17,17 +17,13 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT EntityName, FileName, FolderPath, SourceFormat, StagingTable, LoadOrder FROM ctl.F1_Metadata WHERE IsActive = 1 ORDER BY LoadOrder;",
-						"queryTimeout": "00:02:00",
+						"sqlReaderQuery": "SELECT EntityName, FileName, FolderPath, SourceFormat, StagingTable, LoadType, LoadOrder FROM ctl.F1_Metadata WHERE IsActive = 1 ORDER BY LoadOrder;",
+						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "DS_F1_SQL",
-						"type": "DatasetReference",
-						"parameters": {
-							"pSchema": "ctl",
-							"pTable": "F1_Metadata"
-						}
+						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
 				}
@@ -78,12 +74,16 @@
 										"value": "@item().FolderPath",
 										"type": "Expression"
 									},
+									"SourceFormat": {
+										"value": "@item().SourceFormat",
+										"type": "Expression"
+									},
 									"StagingTable": {
 										"value": "@item().StagingTable",
 										"type": "Expression"
 									},
-									"SourceFormat": {
-										"value": "@item().SourceFormat",
+									"LoadType": {
+										"value": "@item().LoadType",
 										"type": "Expression"
 									}
 								}
@@ -93,11 +93,6 @@
 				}
 			}
 		],
-		"annotations": [
-			"Formula 1 metadata-driven Master pipeline",
-			"Supports Full and Incremental loading",
-			"Runs entities sequentially"
-		]
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }
