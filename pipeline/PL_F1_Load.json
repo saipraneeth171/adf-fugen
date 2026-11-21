@@ -45,7 +45,6 @@
 									"type": "SqlServerStoredProcedure",
 									"dependsOn": [],
 									"policy": {
-										"timeout": "0.12:00:00",
 										"retry": 0,
 										"retryIntervalInSeconds": 30,
 										"secureOutput": false,
@@ -53,7 +52,6 @@
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"storedProcedureName": "[ctl].[usp_TruncateRawTable]",
 										"storedProcedureParameters": {
 											"StagingTable": {
 												"value": {
@@ -79,7 +77,6 @@
 									"type": "SqlServerStoredProcedure",
 									"dependsOn": [],
 									"policy": {
-										"timeout": "0.12:00:00",
 										"retry": 0,
 										"retryIntervalInSeconds": 30,
 										"secureOutput": false,
@@ -104,10 +101,6 @@
 												"type": "Int64"
 											}
 										}
-									},
-									"linkedServiceName": {
-										"referenceName": "AzureSqlDatabase1",
-										"type": "LinkedServiceReference"
 									}
 								}
 							]
@@ -201,7 +194,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "PL_F1_CheckAndCopy_Constructors",
+											"referenceName": "PL_F1_CheckAndCopy_JSONL",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -258,7 +251,6 @@
 					}
 				],
 				"policy": {
-					"timeout": "0.12:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -290,10 +282,6 @@
 							"type": "String"
 						}
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],
@@ -311,6 +299,9 @@
 				"type": "String"
 			},
 			"SourceFormat": {
+				"type": "String"
+			},
+			"LoadType": {
 				"type": "String"
 			}
 		},
