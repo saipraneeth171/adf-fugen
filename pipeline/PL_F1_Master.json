@@ -23,7 +23,11 @@
 					},
 					"dataset": {
 						"referenceName": "DS_F1_SQL",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"pSchema": "ctl",
+							"pTable": "F1_Metadata"
+						}
 					},
 					"firstRowOnly": false
 				}
