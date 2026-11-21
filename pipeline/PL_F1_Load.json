@@ -312,10 +312,6 @@
 			},
 			"SourceFormat": {
 				"type": "String"
-			},
-			"LoadType": {
-				"type": "String",
-				"defaultValue": "FULL"
 			}
 		},
 		"variables": {
