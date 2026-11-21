@@ -33,7 +33,14 @@
 						"size",
 						"lastModified",
 						"itemName"
-					]
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
 				}
 			},
 			{
