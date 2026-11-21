@@ -85,10 +85,6 @@
 									"SourceFormat": {
 										"value": "@item().SourceFormat",
 										"type": "Expression"
-									},
-									"LoadType": {
-										"value": "@pipeline().parameters.LoadType",
-										"type": "Expression"
 									}
 								}
 							}
