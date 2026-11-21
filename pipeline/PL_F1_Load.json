@@ -52,6 +52,7 @@
 									},
 									"userProperties": [],
 									"typeProperties": {
+										"storedProcedureName": "[ctl].[usp_TruncateRawTable]",
 										"storedProcedureParameters": {
 											"StagingTable": {
 												"value": {
